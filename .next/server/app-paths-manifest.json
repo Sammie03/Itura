@@ -1,5 +1,3 @@
 {
-  "/_not-found": "app/_not-found.js",
-  "/api/hello/route": "app/api/hello/route.js",
   "/(default)/page": "app/(default)/page.js"
 }
