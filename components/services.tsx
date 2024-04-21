@@ -410,7 +410,7 @@ export default function Services() {
                         ))
                       ) : (
                         <li className="flex items-center mb-2 mt-5">
-                          <span className='health-care-list' style={{color: 'red'}}>Health care not found</span>
+                          <span className='health-care-list' style={{ color: 'red' }}>Health care not found</span>
                         </li>
                       )}
 
