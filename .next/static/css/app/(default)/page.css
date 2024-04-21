@@ -1900,6 +1900,11 @@
 .zigzag-container .healthcare-searchbox .select-dropdown {
   width: 70%;
 }
+@media (max-width: 767px) {
+  .zigzag-container .healthcare-searchbox .select-dropdown {
+    width: 100%;
+  }
+}
 .zigzag-container .healthcare-searchbox button {
   background-color: white;
 }
