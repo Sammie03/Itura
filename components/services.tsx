@@ -1,19 +1,53 @@
 "use client"
 import { useState } from 'react'
-import { ConfigProvider, Input, TabsProps, Tabs } from 'antd'
+import { ConfigProvider, Input, TabsProps, Tabs, Button } from 'antd'
 import Image from 'next/image'
 import FeatImage03 from '@/public/images/features-03-image-03.png'
 import hospitalWard from '@/public/images/hospital-ward.jpeg'
 import { healthCareList } from './hospitalData';
 import './services.scss';
+import ModalComp from './modal';
+import { DataType } from './modal';
 
 const { Search } = Input;
+
+interface FoodItem {
+  name: string;
+  calories: number;
+  serving_size_g: number;
+  fat_total_g: number;
+  fat_saturated_g: number;
+  protein_g: number;
+  sodium_mg: number;
+  potassium_mg: number;
+  cholesterol_mg: number;
+  carbohydrates_total_g: number;
+  fiber_g: number;
+  sugar_g: number;
+}
+
+const mapFoodItemToDataType = (item: FoodItem): DataType => {
+  return {
+    key: item.name,
+    name: item.name,
+    servingSize: `${item.serving_size_g} g`,
+    calories: `${item.calories} cal`,
+    totalFat: `${item.fat_total_g} g`,
+    saturatedFat: `${item.fat_saturated_g} g`,
+    cholesterol: `${item.cholesterol_mg} mg`,
+    sodium: `${item.sodium_mg} mg`,
+    carbohydrates: `${item.carbohydrates_total_g} g`,
+    fiber: `${item.fiber_g} g`,
+    sugar: `${item.sugar_g} g`,
+    protein: `${item.protein_g} g`,
+  };
+};
 
 export default function Services() {
 
   const [searchParams, useSearchParams] = useState('');
 
-  const [formData, setFormData] = useState({ food: 'Jollof Rice', imgFile: '', recipe: 'Jollof Rice' });
+  const [formData, setFormData] = useState({ food: 'Jollof Rice', recipe: 'Jollof Rice' });
 
   const [activeTab, setActiveTab] = useState('FoodInput')
 
@@ -23,18 +57,32 @@ export default function Services() {
 
   const [loadingRecipe, setLoadingRecipe] = useState(false);
 
-  const [dataFood, setDataFood] = useState();
+  const [dataFood, setDataFood] = useState<FoodItem[]>();
 
   const [dataRecipe, setDataRecipe] = useState();
 
-  const [dataImg, setDataImg] = useState();
+  const [dataImg, setDataImg] = useState<FoodItem[]>();
 
-  const { food, imgFile, recipe } = formData;
+  const dataFoodItems: DataType[] | undefined = dataFood?.map(mapFoodItemToDataType);
+
+  const dataImageItems: DataType[] | undefined = dataImg?.map(mapFoodItemToDataType);
+
+  const { food, recipe } = formData;
 
   const [errors, setErrors] = useState({
     food: '',
     recipe: ''
   });
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleOpenModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -50,6 +98,7 @@ export default function Services() {
 
     e.preventDefault();
 
+    // console.log(`see active tab: ${activeTab}`)
 
     if (activeTab === 'foodInput') {
       setLoadingFood(true);
@@ -67,16 +116,20 @@ export default function Services() {
             throw new Error('Network response was not ok');
           }
           const json = await response.json();
-          console.log(json, 'see Json')
-          setDataFood(json);
+          // console.log(json, 'see Json')
+          setDataFood(json.items);
+          setModalVisible(true);
         } catch (error) {
           console.error('Error fetching data:', error);
+        } finally {
+          setLoadingFood(false);
+          console.log(dataFood, 'see food data')
         }
       };
 
       fetchData();
-      setLoadingFood(false);
     };
+
 
     if (activeTab === 'recipeInput') {
       setLoadingRecipe(true);
@@ -88,6 +141,7 @@ export default function Services() {
             headers: {
               'x-api-key': apiKey,
             },
+            mode: 'no-cors'
           });
 
           if (!response.ok) {
@@ -98,19 +152,61 @@ export default function Services() {
           setDataRecipe(json);
         } catch (error) {
           console.error('Error fetching data:', error);
+        } finally {
+          setLoadingRecipe(false);
+          console.log(dataRecipe, 'see recipe data')
         }
       };
 
       fetchData();
-      setLoadingRecipe(false);
     };
 
-    console.log(dataFood, 'see recipe data')
 
-    console.log(dataRecipe, 'see recipe data')
+    if (activeTab === 'imageInput') {
+      setLoadingImg(true);
+
+      const imgData = new FormData();
+      const fileField = document.querySelector('input[type="file"]');
+      if (fileField instanceof HTMLInputElement && fileField.files && fileField.files.length > 0) {
+        imgData.append("imageFile", fileField.files[0]);
+
+        const fetchData = async () => {
+          try {
+
+            const apiKey = '5tElBoW8Jr+csLmDEd5szQ==To42nfpMqh6El6xu'
+            const response = await fetch(`https://api.calorieninjas.com/v1/imagetextnutrition`, {
+              method: 'POST',
+              body: imgData,
+              headers: {
+                'x-api-key': apiKey,
+              },
+              // mode: 'no-cors'
+            });
+
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            const json = await response.json();
+            // console.log(json, 'see Json')
+            setDataImg(json.items);
+            setModalVisible(true);
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          } finally {
+            setLoadingImg(false);
+            console.log(dataImg, 'see img data');
+          }
+        };
+
+        fetchData();
+      } else {
+        console.error('File input element not found or no file selected.');
+        setLoadingImg(false);
+      }
+
+    };
+
   }
-
-
 
 
   const onChangeHandler = (event: { target: { value: string } }) => {
@@ -150,12 +246,10 @@ export default function Services() {
           <input
             type="file"
             className="tab-input"
-            name="imgFile"
-            value={imgFile}
-            id="file"
+            id="imageFile"
+            name='imageFile'
             accept="image/png,image/jpeg"
-            // placeholder='Upload Image containing food text'
-            onChange={handleChange}
+          // placeholder='Upload Image containing food text'
           />
 
           <button className="find-health-care-btn w-full mb-4 sm:w-auto sm:mb-0" onClick={handleSubmit}>
@@ -288,6 +382,13 @@ export default function Services() {
                     centered={true}
                     tabBarGutter={15}
                     onChange={handleTabChange}
+                  />
+
+                  <ModalComp
+                    title={activeTab === 'recipeInput' ? `Recipe for ${recipe}` : activeTab === 'foodInput' ? `Nutrition Composition of ${food}` : 'Nutrition Composition'}
+                    tableData={activeTab === 'recipeInput' ? dataRecipe : activeTab === 'foodInput' ? dataFoodItems : dataImageItems}
+                    visible={modalVisible}
+                    onClose={handleCloseModal}
                   />
 
                 </div>
