@@ -1,8 +1,6 @@
 import React from 'react';
 import { Modal, Table } from 'antd';
 import type { TableProps } from 'antd';
-
-
 interface ModalProps {
     title: string;
     tableData: any;
@@ -107,13 +105,9 @@ const ModalComp: React.FC<ModalProps> = ({
     recipe,
     recipeData
 }) => {
-    // const [modalOpen, setModalOpen] = useState(false);
 
     return (
         <>
-            {/* <Button type="primary" onClick={() => setModalOpen(true)}>
-                Open Modal
-            </Button> */}
             <Modal
                 title={title}
                 centered
@@ -130,6 +124,7 @@ const ModalComp: React.FC<ModalProps> = ({
                         columns={columns}
                         dataSource={tableData}
                         scroll={{ x: 'max-content' }}
+                        pagination={false}
                     />
 
                 }

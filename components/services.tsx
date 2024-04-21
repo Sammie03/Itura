@@ -1,6 +1,6 @@
 "use client"
 import { useState } from 'react'
-import { ConfigProvider, Input, TabsProps, Tabs, Button } from 'antd'
+import { ConfigProvider, Input, TabsProps, Tabs, Alert } from 'antd'
 import Image from 'next/image'
 import FeatImage03 from '@/public/images/features-03-image-03.png'
 import hospitalWard from '@/public/images/hospital-ward.jpeg'
@@ -71,16 +71,14 @@ export default function Services() {
 
   const [errors, setErrors] = useState({
     food: '',
-    recipe: ''
+    recipe: '',
   });
+
+  const [alertVisible, setAlertVisible] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
 
   const [isTable, setIsTable] = useState(false);
-
-  const handleOpenModal = () => {
-    setModalVisible(true);
-  };
 
   const handleCloseModal = () => {
     setModalVisible(false);
@@ -96,6 +94,26 @@ export default function Services() {
     setActiveTab(activeKey);
   };
 
+  const newErrors = { food: '', recipe: '' };
+
+  const validateInputs = () => {
+    let validationPassed = true;
+
+
+    if (!food.trim() && activeTab === 'foodInput') {
+      newErrors.food = 'Food is required';
+      validationPassed = false;
+    }
+
+    if (!recipe.trim() && activeTab === 'recipeInput') {
+      newErrors.recipe = 'Food is required';
+      validationPassed = false;
+    }
+
+    setErrors(newErrors);
+    return validationPassed;
+  }
+
   const handleSubmit = async (e: any) => {
 
     e.preventDefault();
@@ -103,77 +121,82 @@ export default function Services() {
     // console.log(`see active tab: ${activeTab}`)
 
     if (activeTab === 'foodInput') {
-      setLoadingFood(true);
+      if (validateInputs()) {
+        setLoadingFood(true);
 
-      const fetchData = async () => {
-        try {
-          const apiKey = '5tElBoW8Jr+csLmDEd5szQ==To42nfpMqh6El6xu'
-          const response = await fetch(`https://api.calorieninjas.com/v1/nutrition?query=${food}`, {
-            headers: {
-              'x-api-key': apiKey,
-            },
-          });
+        const fetchData = async () => {
+          try {
+            const apiKey = '5tElBoW8Jr+csLmDEd5szQ==To42nfpMqh6El6xu'
+            const response = await fetch(`https://api.calorieninjas.com/v1/nutrition?query=${food}`, {
+              headers: {
+                'x-api-key': apiKey,
+              },
+            });
 
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            const json = await response.json();
+            // console.log(json, 'see Json')
+            setDataFood(json.items);
+            setModalVisible(true);
+            setIsTable(true);
+          } catch (error) {
+            // console.error('Error fetching data:', error);
+          } finally {
+            setLoadingFood(false);
+            // console.log(dataFood, 'see food data')
           }
-          const json = await response.json();
-          // console.log(json, 'see Json')
-          setDataFood(json.items);
-          setModalVisible(true);
-          setIsTable(true);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        } finally {
-          setLoadingFood(false);
-          console.log(dataFood, 'see food data')
-        }
-      };
+        };
 
-      fetchData();
+        fetchData();
+      }
     };
 
 
     if (activeTab === 'recipeInput') {
-      setLoadingRecipe(true);
+      if (validateInputs()) {
+        setLoadingRecipe(true);
 
-      const fetchData = async () => {
-        try {
-          const apiKey = '5tElBoW8Jr+csLmDEd5szQ==To42nfpMqh6El6xu'
-          const response = await fetch(`https://api.calorieninjas.com/v1/recipe?query=${recipe}`, {
-            headers: {
-              'x-api-key': apiKey,
-            },
-            mode: 'no-cors'
-          });
+        const fetchData = async () => {
+          try {
+            const apiKey = '5tElBoW8Jr+csLmDEd5szQ==To42nfpMqh6El6xu'
+            const response = await fetch(`https://api.calorieninjas.com/v1/recipe?query=${recipe}`, {
+              headers: {
+                'x-api-key': apiKey,
+              },
+              mode: 'no-cors'
+            });
 
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            const json = await response.json();
+            // console.log(json, 'see Json')
+            setDataRecipe(json);
+            setModalVisible(true);
+            setIsTable(false);
+          } catch (error) {
+            // console.error('Error fetching data:', error);
+          } finally {
+            setLoadingRecipe(false);
+            console.log(dataRecipe, 'see recipe data')
           }
-          const json = await response.json();
-          console.log(json, 'see Json')
-          setDataRecipe(json);
-          setModalVisible(true);
-          setIsTable(false);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        } finally {
-          setLoadingRecipe(false);
-          console.log(dataRecipe, 'see recipe data')
-        }
-      };
+        };
 
-      fetchData();
+        fetchData();
+      }
     };
 
 
     if (activeTab === 'imageInput') {
       setLoadingImg(true);
-
       const imgData = new FormData();
       const fileField = document.querySelector('input[type="file"]');
       if (fileField instanceof HTMLInputElement && fileField.files && fileField.files.length > 0) {
         imgData.append("imageFile", fileField.files[0]);
+
+        setAlertVisible(false);
 
         const fetchData = async () => {
           try {
@@ -197,21 +220,24 @@ export default function Services() {
             setModalVisible(true);
             setIsTable(true);
           } catch (error) {
-            console.error('Error fetching data:', error);
+            // console.error('Error fetching data:', error);
           } finally {
             setLoadingImg(false);
-            console.log(dataImg, 'see img data');
+            // console.log(dataImg, 'see img data');
           }
         };
 
         fetchData();
       } else {
         console.error('File input element not found or no file selected.');
+        setAlertVisible(true);
         setLoadingImg(false);
       }
+    }
+  }
 
-    };
-
+  const handleErrorClose = () => {
+    setAlertVisible(false)
   }
 
 
@@ -236,6 +262,7 @@ export default function Services() {
             placeholder='Enter food to get nutrition composition'
             color='#fff'
             onChange={handleChange}
+            style={errors.food ? { border: "1px solid red" } : {}}
           />
 
           <button className="find-health-care-btn mb-4 sm:w-auto sm:mb-0" onClick={handleSubmit}>
@@ -249,40 +276,55 @@ export default function Services() {
       children:
         <div className='tab-two-container'>
 
+          <p className="text-xl text-gray-400">Upload Image containing food text</p>
+
           <input
             type="file"
             className="tab-input"
             id="imageFile"
             name='imageFile'
             accept="image/png,image/jpeg"
+            required
           // placeholder='Upload Image containing food text'
           />
+
+          {
+            alertVisible && <Alert
+              message="Error"
+              description="No file selected"
+              type="error"
+              showIcon
+              closable
+              onClose={handleErrorClose}
+            />
+          }
 
           <button className="find-health-care-btn w-full mb-4 sm:w-auto sm:mb-0" onClick={handleSubmit}>
             {!loadingImg ? 'Get Nutrition' : 'Fetching...'}
           </button>
         </div>,
     },
-    {
-      key: 'recipeInput',
-      label: <p className='tab-title'>Get Recipes</p>,
-      children:
-        <div className='tab-three-container'>
-          <input
-            className="tab-input"
-            type="text"
-            id="recipe"
-            name="recipe"
-            value={recipe}
-            required
-            placeholder='Enter food to get recipes'
-            onChange={handleChange}
-          />
-          <button className="find-health-care-btn w-full mb-4 sm:w-auto sm:mb-0" onClick={handleSubmit}>
-            {!loadingRecipe ? 'Get Recipes' : 'Fetching...'}
-          </button>
-        </div>,
-    },
+    // {
+    //   key: 'recipeInput',
+    //   label: <p className='tab-title'>Get Recipes</p>,
+    //   children:
+    //     <div className='tab-three-container'>
+    //       <input
+    //         className="tab-input"
+    //         type="text"
+    //         id="recipe"
+    //         name="recipe"
+    //         value={recipe}
+    //         required
+    //         placeholder='Enter food to get recipes'
+    //         onChange={handleChange}
+    //         style={errors.recipe ? { border: "1px solid red" } : {}}
+    //       />
+    //       <button className="find-health-care-btn w-full mb-4 sm:w-auto sm:mb-0" onClick={handleSubmit}>
+    //         {!loadingRecipe ? 'Get Recipes' : 'Fetching...'}
+    //       </button>
+    //     </div>,
+    // },
   ];
 
   // const hospitalDetailsList = healthCareList.map(hospital => `${hospital.name}, ${hospital.location}`);
