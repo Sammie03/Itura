@@ -33,9 +33,9 @@
   height: 250px;
   filter: invert(100%) brightness(200%);
 }
-/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[11].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"app/layout.tsx","import":"Inter","arguments":[{"subsets":["latin"],"variable":"--font-inter","display":"swap"}],"variableName":"inter"} ***!
-  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[11].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"app\\layout.tsx","import":"Inter","arguments":[{"subsets":["latin"],"variable":"--font-inter","display":"swap"}],"variableName":"inter"} ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /* cyrillic-ext */
 @font-face {
   font-family: '__Inter_aaf875';
@@ -103,9 +103,9 @@
 }.__variable_aaf875 {--font-inter: '__Inter_aaf875', '__Inter_Fallback_aaf875'
 }
 
-/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[11].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"app/layout.tsx","import":"Architects_Daughter","arguments":[{"subsets":["latin"],"variable":"--font-architects-daughter","weight":"400","display":"swap"}],"variableName":"architects_daughter"} ***!
-  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[11].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"app\\layout.tsx","import":"Architects_Daughter","arguments":[{"subsets":["latin"],"variable":"--font-architects-daughter","weight":"400","display":"swap"}],"variableName":"architects_daughter"} ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /* latin */
 @font-face {
   font-family: '__Architects_Daughter_228ab5';
@@ -1293,6 +1293,12 @@ input[type=range]::-moz-focus-outer {
 .mt-6 {
   margin-top: 1.5rem;
 }
+.-mb-px {
+  margin-bottom: -1px;
+}
+.me-2 {
+  margin-inline-end: 0.5rem;
+}
 .block {
   display: block;
 }
@@ -1431,11 +1437,24 @@ input[type=range]::-moz-focus-outer {
 .rounded-sm {
   border-radius: 0.125rem;
 }
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+.rounded-t-lg {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
 .border {
   border-width: 1px;
 }
 .border-t {
   border-top-width: 1px;
+}
+.border-b {
+  border-bottom-width: 1px;
+}
+.border-b-2 {
+  border-bottom-width: 2px;
 }
 .border-gray-700 {
   --tw-border-opacity: 1;
@@ -1451,6 +1470,18 @@ input[type=range]::-moz-focus-outer {
 }
 .border-transparent {
   border-color: transparent;
+}
+.border-gray-100 {
+  --tw-border-opacity: 1;
+  border-color: rgb(235 241 245 / var(--tw-border-opacity));
+}
+.border-gray-200 {
+  --tw-border-opacity: 1;
+  border-color: rgb(217 227 234 / var(--tw-border-opacity));
+}
+.border-purple-600 {
+  --tw-border-opacity: 1;
+  border-color: rgb(93 93 255 / var(--tw-border-opacity));
 }
 .bg-gray-700 {
   --tw-bg-opacity: 1;
@@ -1480,6 +1511,10 @@ input[type=range]::-moz-focus-outer {
   --tw-bg-opacity: 1;
   background-color: rgb(75 74 207 / var(--tw-bg-opacity));
 }
+.bg-gray-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+}
 .fill-current {
   fill: currentColor;
 }
@@ -1488,6 +1523,9 @@ input[type=range]::-moz-focus-outer {
 }
 .p-6 {
   padding: 1.5rem;
+}
+.p-4 {
+  padding: 1rem;
 }
 .px-3 {
   padding-left: 0.75rem;
@@ -1613,6 +1651,14 @@ input[type=range]::-moz-focus-outer {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
+.text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(112 125 134 / var(--tw-text-opacity));
+}
+.text-gray-800 {
+  --tw-text-opacity: 1;
+  color: rgb(37 40 44 / var(--tw-text-opacity));
+}
 .antialiased {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -1665,6 +1711,10 @@ input[type=range]::-moz-focus-outer {
 [x-cloak=""] {
     display: none;
 }
+.hover\:border-gray-300:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(197 210 220 / var(--tw-border-opacity));
+}
 .hover\:bg-purple-600:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(93 93 255 / var(--tw-bg-opacity));
@@ -1685,9 +1735,63 @@ input[type=range]::-moz-focus-outer {
   --tw-text-opacity: 1;
   color: rgb(217 227 234 / var(--tw-text-opacity));
 }
+.hover\:text-gray-600:hover {
+  --tw-text-opacity: 1;
+  color: rgb(85 89 95 / var(--tw-text-opacity));
+}
+.hover\:text-purple-600:hover {
+  --tw-text-opacity: 1;
+  color: rgb(93 93 255 / var(--tw-text-opacity));
+}
 .focus\:border-purple-300:focus {
   --tw-border-opacity: 1;
   border-color: rgb(203 204 255 / var(--tw-border-opacity));
+}
+@media (prefers-color-scheme: dark) {
+
+  .dark\:border-gray-700 {
+    --tw-border-opacity: 1;
+    border-color: rgb(51 54 58 / var(--tw-border-opacity));
+  }
+
+  .dark\:border-purple-500 {
+    --tw-border-opacity: 1;
+    border-color: rgb(141 141 255 / var(--tw-border-opacity));
+  }
+
+  .dark\:border-transparent {
+    border-color: transparent;
+  }
+
+  .dark\:bg-gray-800 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(37 40 44 / var(--tw-bg-opacity));
+  }
+
+  .dark\:text-gray-400 {
+    --tw-text-opacity: 1;
+    color: rgb(155 169 180 / var(--tw-text-opacity));
+  }
+
+  .dark\:text-purple-500 {
+    --tw-text-opacity: 1;
+    color: rgb(141 141 255 / var(--tw-text-opacity));
+  }
+
+  .dark\:text-white {
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+  }
+
+  .dark\:hover\:text-gray-300:hover {
+    --tw-text-opacity: 1;
+    color: rgb(197 210 220 / var(--tw-text-opacity));
+  }
+
+  .dark\:hover\:text-purple-500:hover {
+    --tw-text-opacity: 1;
+    color: rgb(141 141 255 / var(--tw-text-opacity));
+  }
 }
 @media (min-width: 640px) {
 
