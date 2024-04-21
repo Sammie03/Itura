@@ -18,16 +18,23 @@ export default function Services() {
     useSearchParams(searchParams)
   }
 
-  // const hospitalDetailsList = healthCareList.map(hospital => `${hospital.name}, ${hospital.location}`);
-
-  const hospitalDetailsList = healthCareList.map(hospital => `${hospital.name}, ${hospital.location}`);
-
   const filteredHospitalDetailsList = healthCareList.filter((hospital) => {
     const hospitalName = hospital.name.toLocaleLowerCase().includes(searchParams)
-    const hospitalLocation = hospital.location.toLocaleLowerCase().includes(searchParams)
+    const hospitalAddress = hospital.address.toLocaleLowerCase().includes(searchParams)
 
-    return hospitalName || hospitalLocation
+    return hospitalName || hospitalAddress
   })
+
+  const uniqueIds = new Set();
+
+  const uniqueHealthcareList = filteredHospitalDetailsList.filter(healthcare => {
+    if (uniqueIds.has(healthcare.name)) {
+      return false;
+    } else {
+      uniqueIds.add(healthcare.name);
+      return true;
+    }
+  });
 
   return (
     <section className='zigzag-container'>
@@ -67,21 +74,22 @@ export default function Services() {
                 <div className="md:pr-4 lg:pr-12 xl:pr-16 hospital-list-container">
 
                   <ul className="text-lg text-gray-400 -mb-2 mt-5">
-                    {filteredHospitalDetailsList.map(healthcare => {
-                      return (
+                    {uniqueHealthcareList.length > 0 ? (
+                      uniqueHealthcareList.map(healthcare => (
                         <li className="flex items-center mb-2 mt-5" key={healthcare.id}>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" width="24" height="24">
                             <rect x="14" y="8" width="4" height="16" fill="#7B61FF" />
                             <rect x="8" y="14" width="16" height="4" fill="#7B61FF" />
                           </svg>
-                          {healthcare.name !== '' ? (
-                            <span className='health-care-list'>{`${healthcare.name}, ${healthcare.location}`}</span>
-                          ) : (
-                            <span style={{color: 'white'}}>Healthcare not found</span>
-                          )}
+                          <span className='health-care-list'>{`${healthcare.name}, ${healthcare.address}`}</span>
                         </li>
-                      )
-                    })}
+                      ))
+                    ) : (
+                      <li className="flex items-center mb-2 mt-5">
+                        <span className='health-care-list' style={{color: 'red'}}>Health care not found</span>
+                      </li>
+                    )}
+
                   </ul>
                 </div>
               </div>
