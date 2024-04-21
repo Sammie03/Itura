@@ -49,7 +49,7 @@ export default function Services() {
 
   const [formData, setFormData] = useState({ food: 'Jollof Rice', recipe: 'Jollof Rice' });
 
-  const [activeTab, setActiveTab] = useState('FoodInput')
+  const [activeTab, setActiveTab] = useState('foodInput')
 
   const [loadingFood, setLoadingFood] = useState(false);
 
@@ -75,6 +75,8 @@ export default function Services() {
   });
 
   const [modalVisible, setModalVisible] = useState(false);
+
+  const [isTable, setIsTable] = useState(false);
 
   const handleOpenModal = () => {
     setModalVisible(true);
@@ -119,6 +121,7 @@ export default function Services() {
           // console.log(json, 'see Json')
           setDataFood(json.items);
           setModalVisible(true);
+          setIsTable(true);
         } catch (error) {
           console.error('Error fetching data:', error);
         } finally {
@@ -150,6 +153,8 @@ export default function Services() {
           const json = await response.json();
           console.log(json, 'see Json')
           setDataRecipe(json);
+          setModalVisible(true);
+          setIsTable(false);
         } catch (error) {
           console.error('Error fetching data:', error);
         } finally {
@@ -190,6 +195,7 @@ export default function Services() {
             // console.log(json, 'see Json')
             setDataImg(json.items);
             setModalVisible(true);
+            setIsTable(true);
           } catch (error) {
             console.error('Error fetching data:', error);
           } finally {
@@ -389,6 +395,9 @@ export default function Services() {
                     tableData={activeTab === 'recipeInput' ? dataRecipe : activeTab === 'foodInput' ? dataFoodItems : dataImageItems}
                     visible={modalVisible}
                     onClose={handleCloseModal}
+                    isTable={isTable}
+                    recipe={recipe}
+                    recipeData={undefined}
                   />
 
                 </div>

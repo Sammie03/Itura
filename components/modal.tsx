@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Modal, Space, Table, Tag } from 'antd';
+import React from 'react';
+import { Modal, Table } from 'antd';
 import type { TableProps } from 'antd';
 
 
@@ -8,6 +8,9 @@ interface ModalProps {
     tableData: any;
     visible: boolean;
     onClose: () => void;
+    isTable: boolean;
+    recipe: string;
+    recipeData: any;
 }
 
 export interface DataType {
@@ -95,36 +98,14 @@ const columns: TableProps<DataType>['columns'] = [
 
 ];
 
-// const data: DataType[] = [
-//     {
-//         key: '1',
-//         name: 'John Brown',
-//         age: 32,
-//         address: 'New York No. 1 Lake Park',
-//         tags: ['nice', 'developer'],
-//     },
-//     {
-//         key: '2',
-//         name: 'Jim Green',
-//         age: 42,
-//         address: 'London No. 1 Lake Park',
-//         tags: ['loser'],
-//     },
-//     {
-//         key: '3',
-//         name: 'Joe Black',
-//         age: 32,
-//         address: 'Sydney No. 1 Lake Park',
-//         tags: ['cool', 'teacher'],
-//     },
-// ];
-
-
 const ModalComp: React.FC<ModalProps> = ({
     title,
     tableData,
     visible,
-    onClose
+    onClose,
+    isTable,
+    recipe,
+    recipeData
 }) => {
     // const [modalOpen, setModalOpen] = useState(false);
 
@@ -142,11 +123,34 @@ const ModalComp: React.FC<ModalProps> = ({
                 width={1000}
                 footer={null}
             >
-                <Table
-                    columns={columns}
-                    dataSource={tableData}
-                    scroll={{ x: 'max-content' }}
-                />
+
+                {
+                    isTable &&
+                    <Table
+                        columns={columns}
+                        dataSource={tableData}
+                        scroll={{ x: 'max-content' }}
+                    />
+
+                }
+
+                {
+                    !isTable &&
+                    <div className="recipe-container" style={{ border: '1px solid red' }}>
+                        <div>
+                            <h3 id="result-recipe-title">
+                                {recipe}
+                            </h3>
+                        </div>
+                        <div id="result-recipe">
+                            {
+                                recipeData?.map((item: any) => (
+                                    <p>{item}</p>
+                                ))
+                            }
+                        </div>
+                    </div>
+                }
 
             </Modal>
         </>
